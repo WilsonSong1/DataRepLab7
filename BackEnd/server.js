@@ -16,9 +16,12 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//Connecting to MongoDB
 const mongoose = require('mongoose');
 mongoose.connect('mongodb+srv://123:123@lab7.hrs0y.mongodb.net/?retryWrites=true&w=majority&appName=Lab7');
 
+
+//Defining data model and schema
 const movieSchema = new mongoose.Schema({
   title: String,
   year: String,
@@ -27,6 +30,7 @@ const movieSchema = new mongoose.Schema({
 
 const Movie = mongoose.model('Movie', movieSchema);
 
+//Method to add new movie records
 app.post('/api/movies', async (req, res)=>{
 
   const { title, year, poster } = req.body;
@@ -37,6 +41,7 @@ app.post('/api/movies', async (req, res)=>{
   res.status(201).json({ message: 'Movie created successfully', movie: newMovie });
   })
 
+//retrieving data
 app.get('/api/movies', async (req, res) => {
   const movies = await Movie.find({});
   res.json(movies);
@@ -70,6 +75,7 @@ app.get('/api/movies/server', (req, res) => {
     res.status(200).json({movies})
 });
 
+//Retrieving data by id
 app.get('/api/movies/:id', async (req, res) => {
   const movie = await Movie.findById(req.params.id);
   res.send(movie);
